@@ -21,11 +21,10 @@ function displayImage(json) {
   button.dataset.id = json.id
   let commentForm = document.getElementById("comment_form")
   commentForm.dataset.id = json.id
-  console.log(json)
   let comments = document.getElementById("comments")
   let commentlist = json.comments
   for (i = 0; i < commentlist.length; i++) {
-      addComment(commentlist[i].content)
+      addComment(commentlist[i])
   }
 }
 
@@ -51,7 +50,7 @@ function likeImage(event) {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({"image_id": x})
-    }).then(resp => resp.json()).then(json=> console.log(json))
+    })
 
   }
 }
@@ -59,33 +58,59 @@ function likeImage(event) {
 
 let commentForm = document.getElementById("comment_form")
 
-commentForm.addEventListener("submit", test)
+commentForm.addEventListener("submit", newComment)
 
-function test(event){
+function newComment(event){
   event.preventDefault()
   let comment =  document.getElementById("comment_input")
   let value = comment.value
   let x = event.target.dataset.id
 
-  addComment(value)
-
-  fetch(commentsURL, {
-   method: "POST",
-   headers: {
-     'Accept': 'application/json',
-     'Content-Type': 'application/json'
-   },
-   body: JSON.stringify({"image_id": x, "content": value})
- })
+  // addComment(value)
+  sendCommentToDB(x, value)
   comment.value = ""
 }
 
-function addComment(value) {
+ function sendCommentToDB (x, value){
+    fetch(commentsURL, {
+     method: "POST",
+     headers: {
+       'Accept': 'application/json',
+       'Content-Type': 'application/json'
+     },
+     body: JSON.stringify({"image_id": x, "content": value})
+   }).then(resp => resp.json()).then(json=> addComment(json))
+ }
+
+function addComment(json) {
   let list = document.getElementById("comments")
-  let newComment = document.createElement("li")
-  newComment.innerText = value
-  list.appendChild(newComment)
+  let newListItem = document.createElement("li")
+  newListItem.innerText = json.content
+  newListItem.dataset.id = json.id
+  // let deleteButton = document.createElement("button")
+  // deleteButton.value = "delete"
+  // deleteButton.setAttribute("class", "delete")
+  // deleteButton.innerText = "x"
+  // newListItem.appendChild(deleteButton)
+  list.appendChild(newListItem)
 }
+
+// pageContainer.addEventListener("click", deleteComment)
+//
+// function deleteComment(event){
+//   if(event.target.className === "delete") {
+//     let x = parseInt(event.target.parentNode.dataset.id)
+//
+//     fetch(`${commentsURL}/${x}`,{
+//       method: 'Delete',
+//       headers: {
+//         'Accept': 'application/json',
+//         'Content-Type': 'application/json'
+//       },
+//     }).then(resp=>resp.json()).then(json => console.log(json))
+//   }
+//   event.target.parentNode.remove()
+// }
 
 
 })
