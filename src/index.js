@@ -15,7 +15,7 @@ document.addEventListener('DOMContentLoaded', function() {
     likes.innerText = parseInt(res.like_count)
     //load initial comments
     for (c of res.comments){
-      let newComment = new Comment(c.content)
+      let newComment = new Comment(c.id,c.content)
       comments.append(newComment.render())
       }
     }
@@ -36,11 +36,19 @@ document.addEventListener('DOMContentLoaded', function() {
       let commentInput = document.getElementById('comment_input').value
       if (commentInput !== ''){
         //post comment data, append stuff.
-        let newComment = new Comment(commentInput)
+        let newComment = new Comment(999,commentInput)
         comments.append(newComment.render())
         Adapter.postComment(commentInput)
         let commentInputForm = document.getElementById('comment_input')
         commentInputForm.value = ''
+      }
+    })
+    // handle delete
+    comments.addEventListener('click', function(e){
+      debugger
+      if (e.target.tagName.toLowerCase() === 'button'){
+        e.target.parentNode.remove()
+        Adapter.deleteComment(e.target.parentNode.dataset.id)
       }
     })
 
