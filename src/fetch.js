@@ -44,8 +44,6 @@ class Fetch {
       body: JSON.stringify({
         image_id: 7,
       })
-    }).then(resp => resp.json()).then(json => {
-      Image.all[0].update()
     })
   }
 

@@ -8,10 +8,6 @@ class Image {
     Image.all.push(this)
   }
 
-  static increaseLikes(){
-    let numOfLikes = document.getElementById("likes")
-    console.log(numOfLikes)
-  }
 
   render(){
     let imgTag = document.getElementById("image")
@@ -19,12 +15,22 @@ class Image {
 
     let name = document.getElementById("name")
     name.innerHTML = `${this.name}`
+
+    let numOfLikes = document.getElementById("likes")
+    let like = this.likeCount.toString();
+    numOfLikes.innerHTML = ""
+    numOfLikes.innerHTML = `${like}`
+
+
+
+
   }
 
   update(){
-    let likes = this.likeCount.parseInt()
-    likes++
-    document.getElementById("likes").innerHTML = `${likes}`
+    this.likeCount += 1
+    let stringLike = this.likeCount.toString()
+    document.getElementById("likes").innerHTML = ""
+    document.getElementById("likes").innerHTML = `${stringLike}`
   }
 
 }

@@ -23,6 +23,7 @@ class EventListener {
 
     likeButton.addEventListener("click", event => {
       event.preventDefault()
+      Image.all[0].update()
       Fetch.addLike()
     })
   }
