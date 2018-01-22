@@ -11,18 +11,10 @@ function getimage() {
 
 
 function displayImage(json) {
-  let picture = document.getElementById("image")
-  picture.src = json.url
-  picture.dataset.id = json.id
-  let button = document.getElementById("like_button")
-  button.dataset.id = json.id
-  let likes = document.getElementById("likes")
-  likes.innerText = json.like_count
-  button.dataset.id = json.id
-  let commentForm = document.getElementById("comment_form")
-  commentForm.dataset.id = json.id
+  let newPicture = new Picture(json)
+  newPicture.render()
   let comments = document.getElementById("comments")
-  let commentlist = json.comments
+  let commentlist = newPicture.comments
   for (i = 0; i < commentlist.length; i++) {
       addComment(commentlist[i])
   }
@@ -31,7 +23,6 @@ function displayImage(json) {
 getimage()
 
 let pageContainer = document.getElementById("page-container")
-
 pageContainer.addEventListener("click", likeImage)
 
 function likeImage(event) {
@@ -83,34 +74,27 @@ function newComment(event){
  }
 
 function addComment(json) {
-  let list = document.getElementById("comments")
-  let newListItem = document.createElement("li")
-  newListItem.innerText = json.content
-  newListItem.dataset.id = json.id
-  // let deleteButton = document.createElement("button")
-  // deleteButton.value = "delete"
-  // deleteButton.setAttribute("class", "delete")
-  // deleteButton.innerText = "x"
-  // newListItem.appendChild(deleteButton)
-  list.appendChild(newListItem)
+  let newComment = new Comment(json)
+  newComment.render()
 }
 
-// pageContainer.addEventListener("click", deleteComment)
-//
-// function deleteComment(event){
-//   if(event.target.className === "delete") {
-//     let x = parseInt(event.target.parentNode.dataset.id)
-//
-//     fetch(`${commentsURL}/${x}`,{
-//       method: 'Delete',
-//       headers: {
-//         'Accept': 'application/json',
-//         'Content-Type': 'application/json'
-//       },
-//     }).then(resp=>resp.json()).then(json => console.log(json))
-//   }
-//   event.target.parentNode.remove()
-// }
+pageContainer.addEventListener("click", deleteComment)
+
+function deleteComment(event){
+  if(event.target.className === "delete") {
+    let x = parseInt(event.target.parentNode.dataset.id)
+
+    fetch(`${commentsURL}/${x}`,{
+      method: 'Delete',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+    }).then(resp=>resp.json()).then(json => console.log(json))
+
+  event.target.parentNode.remove()
+  }
+}
 
 
 })
